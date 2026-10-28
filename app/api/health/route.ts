@@ -1,7 +1,23 @@
-export async function GET(){
+
+import { prisma } from "@/lib/prisma";
+
+export async function GET() {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+
     return Response.json({
-        success: true,
-        message: "Bitmark attendance API is running",
-        timestamp: new Date().toISOString(),
-    })
+      status: "ok",
+      database: "connected",
+    });
+  } catch (error) {
+    console.error("Database connection failed:", error);
+
+    return Response.json(
+      {
+        status: "error",
+        database: "disconnected",
+      },
+      { status: 500 }
+    );
+  }
 }
